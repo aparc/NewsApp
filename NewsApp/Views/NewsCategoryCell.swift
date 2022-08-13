@@ -9,6 +9,7 @@ import UIKit
 
 class NewsCategoryCell: UICollectionViewCell {
     
+	// MARK: - IB Outlets
     @IBOutlet weak var newsCategoryLabel: UILabel!
     
 }

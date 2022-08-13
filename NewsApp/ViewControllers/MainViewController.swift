@@ -21,12 +21,13 @@ enum NewsCategory: String, CaseIterable, Decodable {
 
 class MainViewController: UICollectionViewController {
     
-    let newsCategories = NewsCategory.allCases
+	// MARK: - Private Properties
+    private let newsCategories = NewsCategory.allCases
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showNewsList" {
-            guard let newsListVC = segue.destination as? NewsListViewController else { return }
+        if segue.identifier == "showArticleList" {
+            guard let newsListVC = segue.destination as? ArticleListViewController else { return }
             guard let category = sender as? NewsCategory else { return }
         
             newsListVC.newsCategory = category
@@ -59,7 +60,7 @@ extension MainViewController {
 extension MainViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showNewsList", sender: newsCategories[indexPath.item])
+        performSegue(withIdentifier: "showArticleList", sender: newsCategories[indexPath.item])
     }
     
 }

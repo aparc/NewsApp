@@ -11,10 +11,7 @@ struct Article: Decodable, CustomStringConvertible {
     let content: String
     let date: String
     let imageUrl: String
-    let readMoreUrl: String?
-    let time: String
     let title: String
-    let url: String
     
     var description: String {
         title
