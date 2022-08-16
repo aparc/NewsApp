@@ -14,7 +14,7 @@ class ArticleListViewController: UICollectionViewController {
 	var newsCategory: NewsCategory!
 	
 	// MARK: - Private Properties
-	private var newsList = [Article]()
+	private var articleList = [Article]()
 	
 	// MARK: - Life Cycle Methods
 	override func viewDidLoad() {
@@ -40,13 +40,12 @@ class ArticleListViewController: UICollectionViewController {
 extension ArticleListViewController {
 	
 	private func fetchNews(by category: NewsCategory) {
-		NetworkManager.shared.fetch(
-			NewsResponse.self,
+		NetworkManager.shared.fetchArticles(
 			url: "https://inshorts.deta.dev/news?category=\(newsCategory.rawValue)"
 		) { [weak self] result in
 			switch result {
-			case .success(let response):
-				self?.newsList = response.data
+			case .success(let articles):
+                self?.articleList = articles
 				self?.removeActivityIndicator()
 				self?.collectionView.reloadData()
 				
@@ -62,7 +61,7 @@ extension ArticleListViewController {
 extension ArticleListViewController {
 	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		newsList.count
+		articleList.count
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -71,7 +70,7 @@ extension ArticleListViewController {
 		else {
 			return UICollectionViewCell()
 		}
-		cell.configure(with: newsList[indexPath.item])
+		cell.configure(with: articleList[indexPath.item])
 		return cell
 	}
 	
@@ -81,7 +80,7 @@ extension ArticleListViewController {
 extension ArticleListViewController {
 	
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		performSegue(withIdentifier: "showArticle", sender: newsList[indexPath.item])
+		performSegue(withIdentifier: "showArticle", sender: articleList[indexPath.item])
 	}
 	
 }

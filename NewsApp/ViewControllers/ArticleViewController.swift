@@ -40,7 +40,7 @@ class ArticleViewController: UIViewController {
 extension ArticleViewController {
 	
 	private func fetchImage() {
-		NetworkManager.shared.fetchImage(from: article.imageUrl) { [weak self] result in
+		NetworkManager.shared.fetchData(from: article.imageUrl) { [weak self] result in
 			switch result {
 			case .success(let data):
 				self?.imageView.image = UIImage(data: data)

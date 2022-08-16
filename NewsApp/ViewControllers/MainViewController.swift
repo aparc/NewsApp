@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum NewsCategory: String, CaseIterable, Decodable {
+enum NewsCategory: String, CaseIterable {
     
     case business
     case sport

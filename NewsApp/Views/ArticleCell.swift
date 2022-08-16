@@ -27,13 +27,12 @@ class ArticleCell: UICollectionViewCell {
 extension ArticleCell {
 	
 	private func fetchImage(from imageUrl: String) {
-		print(imageUrl)
-		NetworkManager.shared.fetchImage(from: imageUrl) { [weak self] result in
+		NetworkManager.shared.fetchData(from: imageUrl) { [weak self] result in
 			switch result {
 			case .success(let imageData):
 				self?.imageView.image = UIImage(data: imageData)
 			case .failure(let error):
-				print(error.localizedDescription)
+				print(error)
 			}
 		}
 	}
