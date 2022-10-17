@@ -23,15 +23,15 @@ class MainViewController: UICollectionViewController {
     
 	// MARK: - Private Properties
     private let newsCategories = NewsCategory.allCases
+    private let cellIdentifier = "newsCategoryCell"
     
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showArticleList" {
-            guard let newsListVC = segue.destination as? ArticleListViewController else { return }
-            guard let category = sender as? NewsCategory else { return }
+    // MARK: - Life Cycle Methods
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        title = "News"
         
-            newsListVC.newsCategory = category
-        }
+        collectionView.register(NewsCategoryCell.self, forCellWithReuseIdentifier: cellIdentifier)
     }
     
 }
@@ -45,12 +45,12 @@ extension MainViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: "newsCategoryCell", for: indexPath) as? NewsCategoryCell
+            .dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? NewsCategoryCell
         else {
             return UICollectionViewCell()
         }
         
-        cell.newsCategoryLabel.text = newsCategories[indexPath.item].rawValue.capitalized
+        cell.configure(with: newsCategories[indexPath.item].rawValue.capitalized)
         return cell
     }
     
@@ -60,7 +60,10 @@ extension MainViewController {
 extension MainViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showArticleList", sender: newsCategories[indexPath.item])
+        let alViewController = ArticleListViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        let newsCategory = newsCategories[indexPath.item]
+        alViewController.newsCategory = newsCategory
+        navigationController?.pushViewController(alViewController, animated: true)
     }
     
 }

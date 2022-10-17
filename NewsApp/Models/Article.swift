@@ -16,14 +16,6 @@ struct Article: CustomStringConvertible {
         title
     }
     
-    init(author: String, content: String, date: String, imageUrl: String, title: String) {
-        self.author = author
-        self.content = content
-        self.date = date
-        self.imageUrl = imageUrl
-        self.title = title
-    }
-    
     init(articleData: [String: Any]) {
         author = articleData["author"] as? String ?? ""
         content = articleData["content"] as? String ?? ""

@@ -14,24 +14,17 @@ class ArticleListViewController: UICollectionViewController {
 	var newsCategory: NewsCategory!
 	
 	// MARK: - Private Properties
+    private let cellIdentifier = "articleCell"
 	private var articleList = [Article]()
 	
 	// MARK: - Life Cycle Methods
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        collectionView.register(ArticleCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView.backgroundColor = .secondarySystemBackground
 		title = newsCategory.rawValue.capitalized
 		showActivityIndicator()
 		fetchNews(by: newsCategory)
-	}
-	
-	// MARK: - Navigation
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showArticle" {
-			guard let articleVC = segue.destination as? ArticleViewController else { return }
-			guard let article = sender as? Article else { return }
-			
-			articleVC.article = article
-		}
 	}
 	
 }
@@ -66,7 +59,7 @@ extension ArticleListViewController {
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let cell = collectionView
-			.dequeueReusableCell(withReuseIdentifier: "articleCell", for: indexPath) as? ArticleCell
+			.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ArticleCell
 		else {
 			return UICollectionViewCell()
 		}
@@ -80,7 +73,7 @@ extension ArticleListViewController {
 extension ArticleListViewController {
 	
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		performSegue(withIdentifier: "showArticle", sender: articleList[indexPath.item])
+        navigationController?.pushViewController(ArticleViewController(article: articleList[indexPath.item]), animated: true)
 	}
 	
 }
