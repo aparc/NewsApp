@@ -7,11 +7,16 @@
 
 import UIKit
 
-class ArticleViewController: UIViewController {
+class ArticleContentViewController: UIViewController {
+    
+    // MARK: - Public Properties
+    var viewModel: ArticleContentViewModelProtocol! {
+        didSet {
+            setupUI()
+        }
+    }
     
     // MARK: - Private Properties
-    private var article: Article
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -54,30 +59,20 @@ class ArticleViewController: UIViewController {
         return label
     }()
     
-    init(article: Article) {
-        self.article = article
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .secondarySystemBackground
         navigationItem.largeTitleDisplayMode = .never
-        setupView()
     }
     
     // MARK: - Private Methods
-    private func setupView() {
-        fetchImage()
-        authorLaber.text = article.author
-        releaseDateLabel.text = article.date
-        titleLabel.text = article.title
-        contentLabel.text = article.content
+    private func setupUI() {
+        authorLaber.text = viewModel.author
+        releaseDateLabel.text = viewModel.releaseDate
+        titleLabel.text = viewModel.title
+        contentLabel.text = viewModel.content
+        imageView.image = UIImage(data: viewModel.image ?? Data())
         
         view.addSubview(imageView)
         view.addSubview(authorLaber)
@@ -119,18 +114,3 @@ class ArticleViewController: UIViewController {
     
 }
 
-// MARK: - Networking
-extension ArticleViewController {
-    
-    private func fetchImage() {
-        NetworkManager.shared.fetchData(from: article.imageUrl) { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.imageView.image = UIImage(data: data)
-            case.failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-}

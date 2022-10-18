@@ -11,41 +11,25 @@ import UIKit
 class ArticleListViewController: UICollectionViewController {
 	
 	// MARK: - Public Properties
-	var newsCategory: NewsCategory!
+    var viewModel: ArticleListViewModelProtocol! {
+        didSet {
+            title = viewModel.title
+            viewModel.fetchArticles { [weak self] in
+                self?.removeActivityIndicator()
+                self?.collectionView.reloadData()
+            }
+        }
+    }
 	
 	// MARK: - Private Properties
     private let cellIdentifier = "articleCell"
-	private var articleList = [Article]()
 	
 	// MARK: - Life Cycle Methods
 	override func viewDidLoad() {
 		super.viewDidLoad()
         collectionView.register(ArticleCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView.backgroundColor = .secondarySystemBackground
-		title = newsCategory.rawValue.capitalized
 		showActivityIndicator()
-		fetchNews(by: newsCategory)
-	}
-	
-}
-
-// MARK: - Networking
-extension ArticleListViewController {
-	
-	private func fetchNews(by category: NewsCategory) {
-		NetworkManager.shared.fetchArticles(
-			url: "https://inshorts.deta.dev/news?category=\(newsCategory.rawValue)"
-		) { [weak self] result in
-			switch result {
-			case .success(let articles):
-                self?.articleList = articles
-				self?.removeActivityIndicator()
-				self?.collectionView.reloadData()
-				
-			case .failure(let error):
-				print(error.localizedDescription)
-			}
-		}
 	}
 	
 }
@@ -54,7 +38,7 @@ extension ArticleListViewController {
 extension ArticleListViewController {
 	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		articleList.count
+        viewModel.numberOfRows()
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -63,7 +47,7 @@ extension ArticleListViewController {
 		else {
 			return UICollectionViewCell()
 		}
-		cell.configure(with: articleList[indexPath.item])
+        cell.viewModel = viewModel.getArticleCellViewModel(at: indexPath)
 		return cell
 	}
 	
@@ -73,7 +57,10 @@ extension ArticleListViewController {
 extension ArticleListViewController {
 	
 	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.pushViewController(ArticleViewController(article: articleList[indexPath.item]), animated: true)
+        let acViewModel = viewModel.getArticleContenViewModel(at: indexPath)
+        let acViewController = ArticleContentViewController()
+        acViewController.viewModel = acViewModel
+        navigationController?.pushViewController(acViewController, animated: true)
 	}
 	
 }

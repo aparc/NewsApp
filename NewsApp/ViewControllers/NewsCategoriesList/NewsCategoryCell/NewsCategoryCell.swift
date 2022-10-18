@@ -9,6 +9,13 @@ import UIKit
 
 class NewsCategoryCell: UICollectionViewCell {
     
+    // MARK: - Public Properties
+    var viewModel: NewsCategoryCellViewModelProtocol! {
+        didSet {
+            configure(with: viewModel.label)
+        }
+    }
+    
     // MARK: - Private Properties
     private let newsCategoryLabel: UILabel = {
         let label = UILabel()
@@ -18,8 +25,8 @@ class NewsCategoryCell: UICollectionViewCell {
         return label
     }()
     
-    // MARK: - Public Methods
-    func configure(with title: String) {
+    // MARK: - Private Methods
+    private func configure(with title: String) {
         newsCategoryLabel.text = title
         backgroundColor = .systemGray
         layer.cornerRadius = 15
@@ -27,7 +34,6 @@ class NewsCategoryCell: UICollectionViewCell {
         setupConstraints()
     }
     
-    // MARK: - Private Methods
     private func setupConstraints() {
         newsCategoryLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         newsCategoryLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true

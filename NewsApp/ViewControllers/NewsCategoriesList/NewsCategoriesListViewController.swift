@@ -7,27 +7,20 @@
 
 import UIKit
 
-enum NewsCategory: String, CaseIterable {
-    
-    case business
-    case sport
-    case world
-    case politics
-    case technology
-    case science
-    case automobile
-    
-}
-
-class MainViewController: UICollectionViewController {
+class NewsCategoriesListViewController: UICollectionViewController {
     
 	// MARK: - Private Properties
-    private let newsCategories = NewsCategory.allCases
     private let cellIdentifier = "newsCategoryCell"
+    private var viewModel: NewsCategoriesListViewModelProtocol! {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel = NewsCategoriesListViewModel()
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "News"
         
@@ -37,10 +30,10 @@ class MainViewController: UICollectionViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension MainViewController {
+extension NewsCategoriesListViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        newsCategories.count
+        viewModel.numberOfRows()
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -50,26 +43,25 @@ extension MainViewController {
             return UICollectionViewCell()
         }
         
-        cell.configure(with: newsCategories[indexPath.item].rawValue.capitalized)
+        cell.viewModel = viewModel.getNewsCategoryCellViewModel(at: indexPath)
         return cell
     }
     
 }
 
 // MARK: UICollectionViewDelegate
-extension MainViewController {
+extension NewsCategoriesListViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let alViewController = ArticleListViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        let newsCategory = newsCategories[indexPath.item]
-        alViewController.newsCategory = newsCategory
+        alViewController.viewModel = viewModel.getArticleListViewModel(at: indexPath)
         navigationController?.pushViewController(alViewController, animated: true)
     }
     
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension NewsCategoriesListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,

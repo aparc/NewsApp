@@ -9,6 +9,16 @@ import UIKit
 
 class ArticleCell: UICollectionViewCell {
     
+    // MARK: - Public Properties
+    var viewModel: ArticleCellViewModelProtocol! {
+        didSet {
+            viewModel.imageDidChange = { [weak self] viewModel in
+                self?.imageView.image = UIImage(data: viewModel.image ?? Data())
+            }
+            setupUI()
+        }
+    }
+    
     // MARK: - Private Properties
     private let authorLabel: UILabel = {
         let label = UILabel()
@@ -39,22 +49,20 @@ class ArticleCell: UICollectionViewCell {
         return imageView
     }()
     
-    
-    // MARK: - Public Methods
-    func configure(with article: Article) {
+    // MARK: - Private Methods
+    func setupUI() {
         self.addSubview(authorLabel)
         self.addSubview(contentLabel)
         self.addSubview(imageView)
         layer.cornerRadius = 10
         backgroundColor = .white
-        
-        authorLabel.text = article.author
-        contentLabel.text = article.title
-        fetchImage(from: article.imageUrl)
         setupConstraints()
+        
+        authorLabel.text = viewModel.author
+        contentLabel.text = viewModel.title
+        viewModel.fetchImage()
     }
     
-    // MARK: - Private Methods
     private func setupConstraints() {
         // author label constraints
         authorLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
@@ -74,23 +82,3 @@ class ArticleCell: UICollectionViewCell {
     }
     
 }
-
-// MARK: - Networking
-extension ArticleCell {
-    
-    private func fetchImage(from imageUrl: String) {
-        NetworkManager.shared.fetchData(from: imageUrl) { [weak self] result in
-            switch result {
-            case .success(let imageData):
-                self?.imageView.image = UIImage(data: imageData)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-}
-
-
-
-
