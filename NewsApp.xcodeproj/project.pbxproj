@@ -143,8 +143,10 @@
 		49C0C77D28A1A3E3005BD6A0 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				499112F128FF2D2100A14498 /* NewsCategoriesList */,
+				499112F728FF331B00A14498 /* ArticleList */,
+				499112FD28FF387700A14498 /* ArticleContent */,
 				4951B31928A7DF09009D1EDC /* Extensions */,
-				49C0C79B28A1B61A005BD6A0 /* ViewControllers */,
 				49C0C79D28A1B629005BD6A0 /* Models */,
 				496D2A0828A7A7CA0090D629 /* Services */,
 				49C0C79A28A1B613005BD6A0 /* StoryBoards */,
@@ -178,16 +180,6 @@
 				49C0C78928A1A3E8005BD6A0 /* LaunchScreen.storyboard */,
 			);
 			path = StoryBoards;
-			sourceTree = "<group>";
-		};
-		49C0C79B28A1B61A005BD6A0 /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				499112F128FF2D2100A14498 /* NewsCategoriesList */,
-				499112F728FF331B00A14498 /* ArticleList */,
-				499112FD28FF387700A14498 /* ArticleContent */,
-			);
-			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		49C0C79D28A1B629005BD6A0 /* Models */ = {
