@@ -49,11 +49,15 @@ class ArticleCell: UICollectionViewCell {
         return imageView
     }()
     
+    override func prepareForReuse() {
+        imageView.image = nil
+    }
+    
     // MARK: - Private Methods
     func setupUI() {
-        self.addSubview(authorLabel)
-        self.addSubview(contentLabel)
-        self.addSubview(imageView)
+        contentView.addSubview(authorLabel)
+        contentView.addSubview(contentLabel)
+        contentView.addSubview(imageView)
         layer.cornerRadius = 10
         backgroundColor = .white
         setupConstraints()
@@ -65,20 +69,20 @@ class ArticleCell: UICollectionViewCell {
     
     private func setupConstraints() {
         // author label constraints
-        authorLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
+        authorLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         authorLabel.bottomAnchor.constraint(equalTo: contentLabel.topAnchor, constant: -8).isActive = true
-        authorLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
+        authorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
         authorLabel.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -8).isActive = true
         
         // content label constraints
-        contentLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
+        contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
         contentLabel.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -8).isActive = true
         
         // image view constraints
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
+        imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
     }
     
 }

@@ -37,7 +37,8 @@ class ArticleCellViewModel: ArticleCellViewModelProtocol {
     }
     
     func fetchImage() {
-        NetworkManager.shared.fetchData(from: article.imageUrl) { [unowned self] result in
+        NetworkManager.shared.fetchData(from: article.imageUrl) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let data):
                 self.image = data

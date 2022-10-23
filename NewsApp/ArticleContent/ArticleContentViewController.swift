@@ -72,7 +72,9 @@ class ArticleContentViewController: UIViewController {
         releaseDateLabel.text = viewModel.releaseDate
         titleLabel.text = viewModel.title
         contentLabel.text = viewModel.content
-        imageView.image = UIImage(data: viewModel.image ?? Data())
+        viewModel.downloadImage { data in
+            self.imageView.image = UIImage(data: data)
+        }
         
         view.addSubview(imageView)
         view.addSubview(authorLaber)

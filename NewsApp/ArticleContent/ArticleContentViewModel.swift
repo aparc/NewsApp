@@ -12,11 +12,12 @@ protocol ArticleContentViewModelProtocol {
     var releaseDate: String { get }
     var title: String { get }
     var content: String { get }
-    var image: Data? { get }
     init(article: Article)
+    func downloadImage(completion: @escaping (Data) -> Void)
 }
 
 class ArticleContentViewModel: ArticleContentViewModelProtocol {
+    
     var author: String {
         article.author
     }
@@ -33,13 +34,18 @@ class ArticleContentViewModel: ArticleContentViewModelProtocol {
         article.content
     }
     
-    var image: Data? {
-        NetworkManager.shared.fetchImageData(url: article.imageUrl)
-    }
-    
     private let article: Article
     
     required init(article: Article) {
         self.article = article
+    }
+    
+    func downloadImage(completion: @escaping (Data) -> Void) {
+        NetworkManager.shared.fetchData(from: article.imageUrl) { result in
+            switch result {
+            case .success(let data): completion(data)
+            case .failure(let error): print(error.localizedDescription)
+            }
+        }
     }
 }
