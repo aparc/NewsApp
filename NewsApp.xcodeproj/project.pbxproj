@@ -75,13 +75,6 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		499112F128FF2D2100A14498 /* NewsCategoriesList */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = NewsCategoriesList;
-			sourceTree = "<group>";
-		};
 		499112F428FF2EFF00A14498 /* NewsCategoryCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,7 +132,6 @@
 		49C0C77D28A1A3E3005BD6A0 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
-				499112F128FF2D2100A14498 /* NewsCategoriesList */,
 				499112F728FF331B00A14498 /* ArticleList */,
 				499112FD28FF387700A14498 /* ArticleContent */,
 				4951B31928A7DF09009D1EDC /* Extensions */,
