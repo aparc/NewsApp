@@ -54,7 +54,6 @@ class ArticleListViewController: UIViewController {
     
     private func fetchNews() {
         showActivityIndicator()
-        collectionView.reloadSections(IndexSet(integer: 1))
         viewModel.fetchArticles { [weak self] in
             self?.removeActivityIndicator()
             self?.collectionView.reloadSections(IndexSet(integer: 1))
@@ -66,7 +65,7 @@ class ArticleListViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 extension ArticleListViewController: UICollectionViewDataSource {
-
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         2
     }
@@ -81,21 +80,16 @@ extension ArticleListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section  == 0 {
             guard let cell = collectionView
-                .dequeueReusableCell(
-                    withReuseIdentifier: newsCategoryCellIdentifier,
-                    for: indexPath
-                ) as? NewsCategoryCell
+                .dequeueReusableCell(withReuseIdentifier: newsCategoryCellIdentifier, for: indexPath) as? NewsCategoryCell
             else { return UICollectionViewCell() }
+            
             cell.viewModel = viewModel.getNewsCategoryCellViewModel(at: indexPath)
             return cell
         }
         
         
         guard let cell = collectionView
-            .dequeueReusableCell(
-                withReuseIdentifier: articleCellIdentifier,
-                for: indexPath
-            ) as? ArticleCell
+            .dequeueReusableCell(withReuseIdentifier: articleCellIdentifier, for: indexPath) as? ArticleCell
         else { return UICollectionViewCell() }
         
         cell.viewModel = viewModel.getArticleCellViewModel(at: indexPath)
@@ -123,36 +117,45 @@ extension ArticleListViewController: UICollectionViewDelegate {
 extension ArticleListViewController {
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
-        let provider = { (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-            
-            let section: NSCollectionLayoutSection
-            
-            if sectionIndex % 2 == 0 {
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .estimated(44))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
-                
-                section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 10
-                section.contentInsets = .init(top: 5, leading: 20, bottom: 0, trailing: 20)
-                section.orthogonalScrollingBehavior = .continuous
-            } else {
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(150))
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-                
-                section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 15
-                section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
-            }
+        let provider = { [weak self] (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+            guard let self = self else { return nil }
+
+            let section = sectionIndex == 0
+            ? self.createCategoriesLayoutSection()
+            : self.createArticleListLayoutSection()
             
             return section
         }
         
         return UICollectionViewCompositionalLayout(sectionProvider: provider)
+    }
+    
+    private func createCategoriesLayoutSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .estimated(44))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+        section.contentInsets = .init(top: 5, leading: 20, bottom: 0, trailing: 20)
+        section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+        
+        return section
+    }
+    
+    private func createArticleListLayoutSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(150))
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 15
+        section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
+        
+        return section
     }
     
 }

@@ -19,6 +19,7 @@ class NewsCategoryCell: UICollectionViewCell {
     // MARK: - Private Properties
     private let icon: UIImageView = {
         let imageView = UIImageView()
+        imageView.tintColor = .black
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -27,23 +28,33 @@ class NewsCategoryCell: UICollectionViewCell {
     
     private let newsCategoryLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .black
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.backgroundColor = .systemGray5
+        contentView.layer.cornerRadius = 10
+        contentView.addSubview(newsCategoryLabel)
+        contentView.addSubview(icon)
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Private Methods
     private func configure() {
         newsCategoryLabel.text = viewModel.label
         newsCategoryLabel.textColor = viewModel.isSelected ? .white : .black
-        
         icon.image = UIImage(systemName: viewModel.symbol)
         icon.tintColor = viewModel.isSelected ? .white : .black
-        backgroundColor = viewModel.isSelected ? .black : .systemGray5
-        layer.cornerRadius = 10
-        contentView.addSubview(newsCategoryLabel)
-        contentView.addSubview(icon)
+        contentView.backgroundColor = viewModel.isSelected ? .black : .systemGray5
         setupConstraints()
     }
     
