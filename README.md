@@ -1,7 +1,7 @@
 #  News
 
-<img src="https://github.com/aparc/NewsApp/Resources/Screenshot-1.png" width="190" height="400"/>,
-<img src="https://github.com/aparc/NewsApp/Resources/Screenshot-2.png" width="190" height="400"/>
+<img src="https://github.com/aparc/NewsApp/blob/main/NewsApp/Resources/Screenshot-1.png" width="190" height="400"/>,
+<img src="https://github.com/aparc/NewsApp/blob/main/NewsApp/Resources/Screenshot-2.png" width="190" height="400"/>
 
 # Usage
 
