@@ -9,6 +9,7 @@ import Foundation
 
 protocol ArticleListViewModelProtocol {
     var title: String { get }
+    var articleListDidChanged: (() -> Void)? { get set }
     var newsCategoryChanged: (([IndexPath]) -> Void)? { get set }
     
     func fetchArticles(completion: @escaping () -> Void)
@@ -27,6 +28,7 @@ class ArticleListViewModel: ArticleListViewModelProtocol {
         selectedCategory.rawValue.capitalized
     }
     
+    var articleListDidChanged: (() -> Void)?
     var newsCategoryChanged: (([IndexPath]) -> Void)?
     
     private var selectedCategory = NewsCategory.business
@@ -47,6 +49,7 @@ class ArticleListViewModel: ArticleListViewModelProtocol {
             switch result {
             case .success(let data):
                 self?.articles = data
+                self?.articleListDidChanged?()
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -65,8 +68,8 @@ class ArticleListViewModel: ArticleListViewModelProtocol {
         }
         
         selectedCategory = NewsCategory.allCases[indexPath.row]
-        articles = []
         newsCategoryChanged?([indexPath, oldCategoryIndexPath])
+        removeArticleList()
     }
     
     func getArticleContenViewModel(at indexPath: IndexPath) -> ArticleContentViewModelProtocol {
@@ -83,6 +86,11 @@ class ArticleListViewModel: ArticleListViewModelProtocol {
             newsCategory: category,
             isSelected: category == selectedCategory
         )
+    }
+    
+    private func removeArticleList() {
+        articles = []
+        articleListDidChanged?()
     }
     
 }

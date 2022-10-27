@@ -19,6 +19,10 @@ class ArticleListViewController: UIViewController {
                 self?.collectionView.reloadItems(at: indexPaths)
                 self?.fetchNews()
             }
+            
+            viewModel.articleListDidChanged = { [weak self] in
+                self?.collectionView.reloadSections(IndexSet(integer: 1))
+            }
         }
     }
     
